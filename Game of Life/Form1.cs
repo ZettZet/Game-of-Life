@@ -4,21 +4,29 @@ using System.Windows.Forms;
 
 namespace Game_of_Life {
 	public partial class Form1 : Form {
+		#region Свойства
 		internal Life Univers { get; set; }
 		public int Rows { get; set; }
 		public int Columns { get; set; }
-		public new int Scale { get; } = 20;
+		public new int Scale { get; } = 10;
 		public bool Pause { get; set; }
+		#endregion
 
 		public Form1() {
 			InitializeComponent();
 			Rows = UniversePanel.Height / Scale;
 			Columns = UniversePanel.Width / Scale;
+			Size = MaximumSize = MinimumSize = new Size(Columns * Scale + 17, Rows * Scale + 40);
+
 			Univers = new Life(Columns, Rows);
-			RedrawAll();
 			Pause = true;
 
 			UniversePanel.MouseClick += Universe_MouseClick;
+			UniversePanel.MouseWheel += UniversePanel_MouseWheel;
+		}
+
+		private void UniversePanel_MouseWheel(object sender, MouseEventArgs e) {
+			//throw new NotImplementedException();
 		}
 
 		private void Universe_MouseClick(object sender, MouseEventArgs e) {
@@ -36,6 +44,7 @@ namespace Game_of_Life {
 			Redraw(inLocal);
 		}
 
+		#region Перерисовка
 		private void Redraw(Point point) {
 			using(Graphics g = UniversePanel.CreateGraphics()) {
 				Rectangle rect = new Rectangle(new Point(point.X * Scale + 1, point.Y * Scale + 1),
@@ -45,26 +54,9 @@ namespace Game_of_Life {
 								rect);
 			}
 		}
+		#endregion
 
-		private void RedrawAll() {
-			using(Graphics g = UniversePanel.CreateGraphics()) {
-				for(int x = 0; x < Columns; x++) {
-					for(int y = 0; y < Rows; y++) {
-						Rectangle rect = new Rectangle(new Point((x * Scale) + 1, (y * Scale) + 1),
-													   new Size(Scale - 1, Scale - 1));
-
-						g.FillRectangle(new Pen(Univers.Allive[x][y] == true ? Color.White : Color.Black, 0.5f).Brush,
-								rect);
-					}
-				}
-			}
-		}
-
-		private void Timer1_Tick(object sender, EventArgs e) {
-			RedrawAll();
-			Univers.CheckAllives();
-		}
-
+		#region Системные методы
 		private void Form1_KeyDown(object sender, KeyEventArgs e) {
 			switch(e.KeyCode) {
 				case Keys.Space:
@@ -77,11 +69,19 @@ namespace Game_of_Life {
 					Pause = !Pause;
 					break;
 				case Keys.Tab:
-					Univers.Clear();
+					foreach(Point item in Univers.Clear()) {
+						Redraw(item);
+					}
 					break;
 				default:
 					break;
 			}
 		}
+		private void Timer1_Tick(object sender, EventArgs e) {
+			foreach(Point item in Univers.CheckAllives()) {
+				Redraw(item);
+			}
+		}
+		#endregion
 	}
 }
