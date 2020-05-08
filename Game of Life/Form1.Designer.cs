@@ -29,7 +29,6 @@
         private void InitializeComponent()
         {
 			this.components = new System.ComponentModel.Container();
-			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
 			this.panel = new System.Windows.Forms.Panel();
 			this.UniversePanel = new System.Windows.Forms.PictureBox();
 			this.timer1 = new System.Windows.Forms.Timer(this.components);
@@ -49,8 +48,7 @@
 			// 
 			// UniversePanel
 			// 
-			this.UniversePanel.BackColor = System.Drawing.SystemColors.Control;
-			this.UniversePanel.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("UniversePanel.BackgroundImage")));
+			this.UniversePanel.BackColor = System.Drawing.Color.Black;
 			this.UniversePanel.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.UniversePanel.InitialImage = null;
 			this.UniversePanel.Location = new System.Drawing.Point(0, 0);
@@ -71,6 +69,7 @@
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+			this.BackColor = System.Drawing.Color.Black;
 			this.ClientSize = new System.Drawing.Size(1684, 961);
 			this.Controls.Add(this.panel);
 			this.DoubleBuffered = true;
@@ -93,6 +92,6 @@
         private System.Windows.Forms.Panel panel;
         private System.Windows.Forms.PictureBox UniversePanel;
         private System.Windows.Forms.Timer timer1;
-    }
+	}
 }
 

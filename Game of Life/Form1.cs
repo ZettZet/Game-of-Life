@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Drawing;
 using System.Windows.Forms;
+using System.Windows.Forms.VisualStyles;
 
 namespace Game_of_Life {
 	public partial class Form1 : Form {
@@ -19,29 +20,10 @@ namespace Game_of_Life {
 			Size = MaximumSize = MinimumSize = new Size(Columns * Scale + 17, Rows * Scale + 40);
 
 			Univers = new Life(Columns, Rows);
-			Pause = true;
+			Pause = false;
+			ChangePauseState();
 
 			UniversePanel.MouseClick += Universe_MouseClick;
-			UniversePanel.MouseWheel += UniversePanel_MouseWheel;
-		}
-
-		private void UniversePanel_MouseWheel(object sender, MouseEventArgs e) {
-			//throw new NotImplementedException();
-		}
-
-		private void Universe_MouseClick(object sender, MouseEventArgs e) {
-			Point inLocal = new Point(e.Location.X / Scale, e.Location.Y / Scale);
-			switch(e.Button) {
-				case MouseButtons.Left:
-					Univers.SetAlliveCell(inLocal);
-					break;
-				case MouseButtons.Right:
-					Univers.SetDeadCell(inLocal);
-					break;
-				default:
-					break;
-			}
-			Redraw(inLocal);
 		}
 
 		#region Перерисовка
@@ -60,13 +42,7 @@ namespace Game_of_Life {
 		private void Form1_KeyDown(object sender, KeyEventArgs e) {
 			switch(e.KeyCode) {
 				case Keys.Space:
-					if(Pause == true) {
-						timer1.Stop();
-					}
-					else {
-						timer1.Start();
-					}
-					Pause = !Pause;
+					ChangePauseState();
 					break;
 				case Keys.Tab:
 					foreach(Point item in Univers.Clear()) {
@@ -77,10 +53,34 @@ namespace Game_of_Life {
 					break;
 			}
 		}
+		private void ChangePauseState() {
+			if(Pause) {
+				timer1.Stop();
+			}
+			else {
+				timer1.Start();
+			}
+
+			Pause = !Pause;
+		}
 		private void Timer1_Tick(object sender, EventArgs e) {
 			foreach(Point item in Univers.CheckAllives()) {
 				Redraw(item);
 			}
+		}
+		private void Universe_MouseClick(object sender, MouseEventArgs e) {
+			Point inLocal = new Point(e.Location.X / Scale, e.Location.Y / Scale);
+			switch(e.Button) {
+				case MouseButtons.Left:
+					Univers.SetAlliveCell(inLocal);
+					break;
+				case MouseButtons.Right:
+					Univers.SetDeadCell(inLocal);
+					break;
+				default:
+					break;
+			}
+			Redraw(inLocal);
 		}
 		#endregion
 	}
